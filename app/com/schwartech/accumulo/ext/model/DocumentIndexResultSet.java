@@ -1,4 +1,4 @@
-package com.schwartech.accumulo.model;
+package com.schwartech.accumulo.ext.model;
 
 import org.apache.accumulo.core.data.Key;
 import org.apache.accumulo.core.data.Range;

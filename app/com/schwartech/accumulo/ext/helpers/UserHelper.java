@@ -1,4 +1,4 @@
-package com.schwartech.accumulo.helpers;
+package com.schwartech.accumulo.ext.helpers;
 
 import com.schwartech.accumulo.Accumulo;
 import org.apache.accumulo.core.client.AccumuloException;

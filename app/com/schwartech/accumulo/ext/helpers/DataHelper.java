@@ -1,8 +1,8 @@
-package com.schwartech.accumulo.helpers;
+package com.schwartech.accumulo.ext.helpers;
 
 import com.schwartech.accumulo.Accumulo;
-import com.schwartech.accumulo.model.DocumentIndexResultSet;
-import com.schwartech.accumulo.model.DocumentResultSet;
+import com.schwartech.accumulo.ext.model.DocumentIndexResultSet;
+import com.schwartech.accumulo.ext.model.DocumentResultSet;
 import org.apache.accumulo.core.client.*;
 import org.apache.accumulo.core.client.Scanner;
 import org.apache.accumulo.core.data.Key;
