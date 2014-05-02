@@ -8,6 +8,7 @@ import org.apache.hadoop.io.Text;
 import play.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -41,17 +42,17 @@ public class DocumentResultSet {
         return get(new Text(key));
     }
 
-    public Map<Text, Document> sort(DocumentIndexResultSet dirs) {
-        Map<Text, Document> sortedMap =  new TreeMap<Text, Document>(new DocumentDocumentIndexComparator(dirs));
-        Logger.info("keys pre-sort : "+dirs.rowDocuments.keySet());
-        for (Range range : dirs.getColQualifiers()) {
+    public Map<Text, Document> sort(List<Range> colQuals) {
+        Map<Text, Document> sortedMap =  new TreeMap<Text, Document>(new DocumentDocumentIndexComparator(colQuals));
+//        Logger.info("keys pre-sort : "+dirs.rowDocuments.keySet());
+        for (Range range : colQuals) {
 //            Logger.info("key :"+ key.toString() +" | rowKey : "+dirs.get(key.toString()).rowKey);
 //            Logger.info("range row key : "+dirs.rowDocuments.get(key).getColQualifiers());
             Logger.info("key : "+range.getStartKey().getRow()+" | Value : "+get(range.getStartKey().getRow()));
             sortedMap.put(range.getStartKey().getRow(), get(range.getStartKey().getRow()));
         }
         rowDocuments = sortedMap;
-        Logger.info("keys : "+dirs.rowDocuments.keySet());
+//        Logger.info("keys : "+dirs.rowDocuments.keySet());
         return sortedMap;
     }
 }
