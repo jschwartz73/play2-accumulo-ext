@@ -16,8 +16,8 @@ import java.util.Set;
 public class DocumentDocumentIndexComparator implements Comparator<Text> {
     private List<Range> sortedRanges;
 
-    public DocumentDocumentIndexComparator(DocumentIndexResultSet dirs) {
-        this.sortedRanges = dirs.getColQualifiers();
+    public DocumentDocumentIndexComparator(List<Range> sortedRanges) {
+        this.sortedRanges = sortedRanges;
     }
 
     @Override
