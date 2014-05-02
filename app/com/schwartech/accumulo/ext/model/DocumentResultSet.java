@@ -1,11 +1,15 @@
 package com.schwartech.accumulo.ext.model;
 
+import com.schwartech.accumulo.ext.comparators.DocumentDocumentIndexComparator;
 import org.apache.accumulo.core.data.Key;
+import org.apache.accumulo.core.data.Range;
 import org.apache.accumulo.core.data.Value;
 import org.apache.hadoop.io.Text;
+import play.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by jeff on 3/20/14.
@@ -35,5 +39,19 @@ public class DocumentResultSet {
 
     public Document get(String key) {
         return get(new Text(key));
+    }
+
+    public Map<Text, Document> sort(DocumentIndexResultSet dirs) {
+        Map<Text, Document> sortedMap =  new TreeMap<Text, Document>(new DocumentDocumentIndexComparator(dirs));
+        Logger.info("keys pre-sort : "+dirs.rowDocuments.keySet());
+        for (Range range : dirs.getColQualifiers()) {
+//            Logger.info("key :"+ key.toString() +" | rowKey : "+dirs.get(key.toString()).rowKey);
+//            Logger.info("range row key : "+dirs.rowDocuments.get(key).getColQualifiers());
+            Logger.info("key : "+range.getStartKey().getRow()+" | Value : "+get(range.getStartKey().getRow()));
+            sortedMap.put(range.getStartKey().getRow(), get(range.getStartKey().getRow()));
+        }
+        rowDocuments = sortedMap;
+        Logger.info("keys : "+dirs.rowDocuments.keySet());
+        return sortedMap;
     }
 }

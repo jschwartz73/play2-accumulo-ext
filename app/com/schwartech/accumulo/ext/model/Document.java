@@ -52,6 +52,10 @@ public class Document {
         return value;
     }
 
+    public Text getRowKey() {
+        return this.rowKey;
+    }
+
     public Set<String> getKeys() {
         return indexData.keySet();
     }

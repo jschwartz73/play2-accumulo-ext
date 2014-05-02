@@ -5,10 +5,7 @@ import org.apache.accumulo.core.data.Range;
 import org.apache.accumulo.core.data.Value;
 import org.apache.hadoop.io.Text;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by jeff on 3/20/14.
@@ -17,7 +14,7 @@ public class DocumentIndexResultSet {
     public Map<Text, DocumentIndex> rowDocuments;
 
     public DocumentIndexResultSet() {
-        rowDocuments = new HashMap<Text, DocumentIndex>();
+        rowDocuments = new TreeMap<Text, DocumentIndex>();
     }
 
     public void add(Key key, Value value) {
@@ -40,8 +37,8 @@ public class DocumentIndexResultSet {
         return getByRow(new Text(key));
     }
 
-    public Set<Range> getColQualifiers() {
-        Set<Range> ranges = new HashSet<Range>();
+    public List<Range> getColQualifiers() {
+        List<Range> ranges = new LinkedList<Range>();
 
         for (Text t : rowDocuments.keySet()) {
             ranges.addAll(rowDocuments.get(t).getColQualifiersAsRangeList());

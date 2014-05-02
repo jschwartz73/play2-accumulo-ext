@@ -58,7 +58,7 @@ public class DocumentIndex {
     }
 
     public Set<Range> getColQualifiersAsRangeList() {
-        Set<Range> ranges = new HashSet<Range>();
+        Set<Range> ranges = new LinkedHashSet<Range>();
 
         for (String key : indexData.keySet()) {
             for (String r : indexData.get(key)) {
