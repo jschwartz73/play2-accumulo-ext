@@ -17,16 +17,18 @@ public class DocumentIndexResultSet {
         rowDocuments = new TreeMap<Text, DocumentIndex>();
     }
 
-    public void add(Key key, Value value) {
+    public Boolean add(Key key, Value value) {
         DocumentIndex d = getByRow(key.getRow());
 
         if (d == null) {
             d = new DocumentIndex();
         }
 
-        d.add(key, value);
+        Boolean contains = d.add(key, value);
 
         rowDocuments.put(d.rowKey, d);
+
+        return contains;
     }
 
     private DocumentIndex getByRow(Text key) {

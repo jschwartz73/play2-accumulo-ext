@@ -22,7 +22,8 @@ public class DocumentIndex {
         indexData = new HashMap<String, List<String>>();
     }
 
-    public void add(Key key, Value value) throws IllegalArgumentException {
+    public Boolean add(Key key, Value value) throws IllegalArgumentException {
+        Boolean contains = true;
         if (rowKey == null) {
             rowKey = key.getRow();
         } else if (!key.getRow().equals(rowKey)) {
@@ -34,6 +35,12 @@ public class DocumentIndex {
         String colFamKey = key.getColumnFamily().toString();
         String colQualKey = key.getColumnQualifier().toString();
 
+        for (String text  : indexData.keySet()) {
+            if (indexData.get(text).contains(colQualKey)){
+                contains = false;
+            }
+        }
+
         if (!indexData.containsKey(colFamKey)) {
             indexData.put(colFamKey, new ArrayList<String>());
         }
@@ -42,6 +49,8 @@ public class DocumentIndex {
         colQualifiers.add(colQualKey);
 
         indexData.put(colFamKey, colQualifiers);
+
+        return contains;
     }
 
     public Set<String> getColQualifiers() {
