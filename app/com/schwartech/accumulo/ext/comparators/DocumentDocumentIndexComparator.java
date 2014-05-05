@@ -25,8 +25,6 @@ public class DocumentDocumentIndexComparator implements Comparator<Text> {
         int idx1 = sortedRanges.indexOf(new Range(doc1));
         int idx2 = sortedRanges.indexOf(new Range(doc2));
 
-        Logger.info(("Idx1: " + idx1 + ", Idx2: " + idx2));
-
         return new Integer(idx1).compareTo(new Integer(idx2));
     }
 
