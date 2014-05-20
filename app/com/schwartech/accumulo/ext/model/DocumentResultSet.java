@@ -31,7 +31,7 @@ public class DocumentResultSet {
 
         d.add(key, value);
 
-        rowDocuments.put(d.rowKey, d);
+        rowDocuments.put(d.getRowKey(), d);
     }
 
     public Document get(Text key) {
