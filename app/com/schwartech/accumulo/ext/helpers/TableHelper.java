@@ -1,12 +1,10 @@
 package com.schwartech.accumulo.ext.helpers;
 
 import com.schwartech.accumulo.Accumulo;
-import org.apache.accumulo.core.client.AccumuloException;
-import org.apache.accumulo.core.client.AccumuloSecurityException;
-import org.apache.accumulo.core.client.TableExistsException;
-import org.apache.accumulo.core.client.TableNotFoundException;
+import org.apache.accumulo.core.client.*;
 
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by jeff on 3/24/14.
@@ -14,15 +12,40 @@ import java.util.SortedSet;
 public class TableHelper {
 
     public static boolean tableExists(String table) throws AccumuloSecurityException, AccumuloException {
-        return Accumulo.getConnector().tableOperations().exists(table);
+        boolean tableExists = false;
+
+        Connector connector = null;
+
+        try {
+            connector = Accumulo.getConnector();
+            tableExists = connector.tableOperations().exists(table);
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
+
+        return tableExists;
     }
 
     public void deleteTable(String table) throws AccumuloSecurityException, AccumuloException, TableExistsException, TableNotFoundException {
-        Accumulo.getConnector().tableOperations().delete(table);
+        Connector connector = null;
+
+        try {
+            connector = Accumulo.getConnector();
+            connector.tableOperations().delete(table);
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
     }
 
     public static void createTable(String table) throws AccumuloSecurityException, AccumuloException, TableExistsException {
-        Accumulo.getConnector().tableOperations().create(table);
+        Connector connector = null;
+
+        try {
+            connector = Accumulo.getConnector();
+            connector.tableOperations().create(table);
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
     }
 
     public static SortedSet<String> getUserTables() throws AccumuloSecurityException, AccumuloException {
@@ -33,6 +56,17 @@ public class TableHelper {
     }
 
     public static SortedSet<String> getAllTables() throws AccumuloSecurityException, AccumuloException {
-        return Accumulo.getConnector().tableOperations().list();
+        SortedSet<String> tables = new TreeSet<String>();
+
+        Connector connector = null;
+
+        try {
+            connector = Accumulo.getConnector();
+            tables = connector.tableOperations().list();
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
+
+        return tables;
     }
 }

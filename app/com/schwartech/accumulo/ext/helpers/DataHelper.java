@@ -21,21 +21,29 @@ public class DataHelper {
     public static DocumentResultSet query(String table, Authorizations auths, Set<Range> ranges, Map<String, String> columnsToFetch) throws AccumuloSecurityException, AccumuloException, TableNotFoundException {
         DocumentResultSet drs = new DocumentResultSet();
 
-        BatchScanner scanner = Accumulo.createBatchScanner(table, auths);
+        Connector connector = null;
 
-        if (!ranges.isEmpty()) {
-            scanner.setRanges(ranges);
+        try {
+            connector = Accumulo.getConnector();
+
+            BatchScanner scanner = connector.createBatchScanner(table, auths, Accumulo.getNumThreads());
+
+            if (!ranges.isEmpty()) {
+                scanner.setRanges(ranges);
+            }
+
+            for (Map.Entry<String, String> entry : columnsToFetch.entrySet()) {
+                scanner.fetchColumn(new Text(entry.getKey()), new Text(entry.getValue()));
+            }
+
+            for (Map.Entry<Key,Value> entry : scanner) {
+                drs.add(entry.getKey(), entry.getValue());
+            }
+
+            scanner.close();
+        } finally {
+            Accumulo.closeConnector(connector);
         }
-
-        for (Map.Entry<String, String> entry : columnsToFetch.entrySet()) {
-            scanner.fetchColumn(new Text(entry.getKey()), new Text(entry.getValue()));
-        }
-
-        for (Map.Entry<Key,Value> entry : scanner) {
-            drs.add(entry.getKey(), entry.getValue());
-        }
-
-        scanner.close();
 
         return drs;
     }
@@ -43,30 +51,52 @@ public class DataHelper {
     public static DocumentIndexResultSet queryIndex(String table, Authorizations auths, Range range) throws AccumuloSecurityException, AccumuloException, TableNotFoundException {
         DocumentIndexResultSet dirs = new DocumentIndexResultSet();
 
-        Scanner indexScanner = Accumulo.createScanner(table, auths);
+        Connector connector = null;
 
-        indexScanner.setRange(range);
+        try {
+            connector = Accumulo.getConnector();
 
-        for (Map.Entry<Key,Value> entry : indexScanner) {
-            dirs.add(entry.getKey(), entry.getValue());
+            Scanner indexScanner = connector.createScanner(table, auths);
+
+            indexScanner.setRange(range);
+
+            for (Map.Entry<Key,Value> entry : indexScanner) {
+                dirs.add(entry.getKey(), entry.getValue());
+            }
+
+            indexScanner.close();
+        } finally {
+            Accumulo.closeConnector(connector);
         }
 
-        indexScanner.close();
 
         return dirs;
     }
 
     public static void deleteRange(String table, Authorizations auths, Range range) throws AccumuloSecurityException, AccumuloException, TableNotFoundException {
-        BatchDeleter deleter = Accumulo.createBatchDeleter(table, auths);
-        List<Range> ranges = new ArrayList<Range>();
-        ranges.add(range);
-        deleteRanges(table, auths, ranges);
+        Connector connector = null;
+
+        try {
+            connector = Accumulo.getConnector();
+            BatchDeleter deleter = connector.createBatchDeleter(table, auths, Accumulo.getNumThreads(), Accumulo.getDefaultWriterConfig());
+            List<Range> ranges = new ArrayList<Range>();
+            ranges.add(range);
+            deleteRanges(table, auths, ranges);
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
     }
 
     public static void deleteRanges(String table, Authorizations auths, Collection<Range> ranges) throws AccumuloSecurityException, AccumuloException, TableNotFoundException {
-        BatchDeleter deleter = Accumulo.createBatchDeleter(table, auths);
-        deleter.setRanges(ranges);
-        deleter.delete();
-        deleter.close();
+        Connector connector = null;
+        try {
+            connector = Accumulo.getConnector();
+            BatchDeleter deleter = connector.createBatchDeleter(table, auths, Accumulo.getNumThreads(), Accumulo.getDefaultWriterConfig());
+            deleter.setRanges(ranges);
+            deleter.delete();
+            deleter.close();
+        } finally {
+            Accumulo.closeConnector(connector);
+        }
     }
 }
