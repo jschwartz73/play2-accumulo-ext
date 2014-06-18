@@ -20,7 +20,7 @@ public class TableHelper {
             connector = Accumulo.getConnector();
             tableExists = connector.tableOperations().exists(table);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return tableExists;
@@ -33,7 +33,7 @@ public class TableHelper {
             connector = Accumulo.getConnector();
             connector.tableOperations().delete(table);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 
@@ -44,7 +44,7 @@ public class TableHelper {
             connector = Accumulo.getConnector();
             connector.tableOperations().create(table);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 
@@ -64,7 +64,7 @@ public class TableHelper {
             connector = Accumulo.getConnector();
             tables = connector.tableOperations().list();
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return tables;

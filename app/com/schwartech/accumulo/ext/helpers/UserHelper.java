@@ -25,7 +25,7 @@ public class UserHelper {
             connector = Accumulo.getConnector();
             userExists = connector.securityOperations().listLocalUsers().contains(username);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return userExists;
@@ -43,7 +43,7 @@ public class UserHelper {
         } catch (Exception e) {
             Logger.error("Error validating user", e);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return success;
@@ -60,7 +60,7 @@ public class UserHelper {
                 connector.securityOperations().createLocalUser(username, token);
                 Logger.debug("User created: " + username);
             } finally {
-                Accumulo.closeConnector(connector);
+                Accumulo.releaseConnector(connector);
             }
         }
     }
@@ -72,7 +72,7 @@ public class UserHelper {
             connector.securityOperations().dropLocalUser(username);
             Logger.debug("User deleted: " + username);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 
@@ -85,7 +85,7 @@ public class UserHelper {
             connector = Accumulo.getConnector();
             usernames = connector.securityOperations().listLocalUsers();
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return usernames;
@@ -108,7 +108,7 @@ public class UserHelper {
             connector = Accumulo.getConnector();
             connector.securityOperations().changeUserAuthorizations(username, newAuths);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 
@@ -128,7 +128,7 @@ public class UserHelper {
             connector = Accumulo.getConnector();
             auths = connector.securityOperations().getUserAuthorizations(username);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return auths;

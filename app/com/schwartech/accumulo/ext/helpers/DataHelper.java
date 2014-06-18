@@ -42,7 +42,7 @@ public class DataHelper {
 
             scanner.close();
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
         return drs;
@@ -66,7 +66,7 @@ public class DataHelper {
 
             indexScanner.close();
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
 
 
@@ -83,7 +83,7 @@ public class DataHelper {
             ranges.add(range);
             deleteRanges(table, auths, ranges);
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 
@@ -96,7 +96,7 @@ public class DataHelper {
             deleter.delete();
             deleter.close();
         } finally {
-            Accumulo.closeConnector(connector);
+            Accumulo.releaseConnector(connector);
         }
     }
 }
