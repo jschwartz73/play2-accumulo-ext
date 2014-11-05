@@ -8,8 +8,7 @@ publishTo := Some(Resolver.file("http://schwartech.github.com/m2repo/releases/",
   new File("/Users/jeff/dev/myprojects/schwartech.github.com/m2repo/releases")))
 
 libraryDependencies ++= Seq(
-  "com.schwartech" %% "accumulo-plugin" % "1.0-SNAPSHOT",
-  "com.google.guava" % "guava" % "14.0"
+  "com.schwartech" %% "accumulo-plugin" % "1.0-SNAPSHOT"
 )
 
 resolvers += (
